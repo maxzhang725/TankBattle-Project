@@ -8,7 +8,6 @@ package tankbattle;
  *
  * @author MaxZhang
  */
-import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
@@ -16,8 +15,8 @@ import javax.swing.Timer;
 import javax.swing.JPanel;
 import java.awt.event.KeyListener;
 
-public class Game extends JPanel implements EventListener{
-    private gameWall wall;
+public class Game extends JPanel implements ActionListener{
+    private GameWall wall;
     
     //Sets up every instance variable related to player/tank 1
     private ImageIcon tank1;	
@@ -33,7 +32,7 @@ public class Game extends JPanel implements EventListener{
     
     //Sets up every instance variable related to player/tank 2
     private ImageIcon tank2;	
-    private int p2XCoord = 200;
+    private int p2XCoord = 400;
     private int p2YCoord = 550;	
     private boolean p2FaceRight = false;
     private boolean p2FaceLeft = false;
@@ -54,7 +53,7 @@ public class Game extends JPanel implements EventListener{
     
     public Game()
     {
-        wall = new gameWall();
+        wall = new GameWall();
         p1Keyboard = new Player1Keyboard();
         p2Keyboard = new Player2Keyboard();
         setFocusable(true); //maybe dont need
@@ -62,16 +61,17 @@ public class Game extends JPanel implements EventListener{
         addKeyListener(p2Keyboard);
         setFocusTraversalKeysEnabled(false); //idk what this does
         
-        timer = new Timer(delay, (ActionListener) this);
+        timer = new Timer(delay, this);
         timer.start(); //or this
     }
     
+    @Override
     public void paint(Graphics g)
     {
-        g.setColor(Color.GREEN);
+        g.setColor(Color.BLACK);
         g.fillRect(0, 0, 650, 600);
         
-        g.setColor(Color.WHITE);
+        g.setColor(Color.GRAY);
         g.fillRect(660, 0, 140, 600); //can change to the top of the screen instead
         
         wall.draw(this, g);
@@ -81,19 +81,19 @@ public class Game extends JPanel implements EventListener{
             //Orients direction for player 1
             if (p1FaceUp)
             {
-                tank1 = new ImageIcon("player1_tank_up.png");
+                tank1 = new ImageIcon("src\\tankbattle\\images\\player1_tank_up.png");
             }
             else if (p1FaceLeft)
             {
-                tank1 = new ImageIcon("player1_tank_left.png");
+                tank1 = new ImageIcon("src\\tankbattle\\images\\player1_tank_left.png");
             }
             else if (p1FaceDown)
             {
-                tank1 = new ImageIcon("player1_tank_down_png");
+                tank1 = new ImageIcon("src\\tankbattle\\images\\player1_tank_down.png");
             }
             else if (p1FaceRight)
             {
-                tank1 = new ImageIcon("player1_tank_right.png");
+                tank1 = new ImageIcon("src\\tankbattle\\images\\player1_tank_right.png");
             }
             tank1.paintIcon(this, g, p1XCoord, p1YCoord);
             
@@ -101,19 +101,19 @@ public class Game extends JPanel implements EventListener{
             //Orients direction for player 2
             if (p2FaceUp)
             {
-                tank2 = new ImageIcon("player2_tank_up.png");
+                tank2 = new ImageIcon("src\\tankbattle\\images\\player2_tank_up.png");
             }
             else if (p2FaceLeft)
             {
-                tank2 = new ImageIcon("player2_tank_left.png");
+                tank2 = new ImageIcon("src\\tankbattle\\images\\player2_tank_left.png");
             }
             else if (p2FaceDown)
             {
-                tank2 = new ImageIcon("player2_tank_down_png");
+                tank2 = new ImageIcon("src\\tankbattle\\images\\player2_tank_down.png");
             }
             else if (p2FaceRight)
             {
-                tank2 = new ImageIcon("player2_tank_right.png");
+                tank2 = new ImageIcon("src\\tankbattle\\images\\player2_tank_right.png");
             }
             tank2.paintIcon(this, g, p2XCoord, p2YCoord);
             
@@ -230,7 +230,7 @@ public class Game extends JPanel implements EventListener{
         g.drawString("Player 1: " + p1Tanks, 670, 180);
         g.drawString("Player 2: " + p2Tanks, 670, 210);
         
-        if (p1Tanks == 0)
+        if (p1Tanks <= 0)
         {
             g.setColor(Color.WHITE);
             g.setFont(new Font("serif", Font.BOLD, 60));
@@ -239,9 +239,9 @@ public class Game extends JPanel implements EventListener{
             playGame = false;
             g.setColor(Color.WHITE);
             g.setFont(new Font("serif", Font.BOLD, 30));
-            g.drawString("(Space to Restart)", 230, 430);
+            g.drawString("(\"R\" to Restart)", 230, 430);
         }
-        else if (p2Tanks == 0)
+        else if (p2Tanks <= 0)
         {
             g.setColor(Color.WHITE);
             g.setFont(new Font("serif", Font.BOLD, 60));
@@ -250,13 +250,14 @@ public class Game extends JPanel implements EventListener{
             playGame = false;
             g.setColor(Color.WHITE);
             g.setFont(new Font("serif", Font.BOLD, 30));
-            g.drawString("(Space to Restart)", 230, 430);
+            g.drawString("(\"R\" to Restart)", 230, 430);
         }
         
         g.dispose();
     }
     
-    public void actionPerfromed(ActionEvent e)
+    @Override
+    public void actionPerformed(ActionEvent e)
     {
         timer.start();
         repaint();
@@ -264,18 +265,21 @@ public class Game extends JPanel implements EventListener{
     
     private class Player1Keyboard implements KeyListener
     {
+        @Override
         public void keyTyped(KeyEvent e)
         {
         }
+        @Override
         public void keyReleased(KeyEvent e)
         {
         }
-        public void KeyPressed(KeyEvent e)
+        @Override
+        public void keyPressed(KeyEvent e)
         {
             //Restart game during game over screen
-            if (e.getKeyCode() == KeyEvent.VK_R && (p1Tanks == 0 || p2Tanks == 0))
+            if (e.getKeyCode() == KeyEvent.VK_R && (p1Tanks <= 0 || p2Tanks <= 0))
             {
-                wall = new gameWall();
+                wall = new GameWall();
                 p1XCoord = 200;
                 p1YCoord = 550;
                 p1FaceUp = true;
@@ -370,13 +374,16 @@ public class Game extends JPanel implements EventListener{
     
     private class Player2Keyboard implements KeyListener
     {
+        @Override
         public void keyTyped(KeyEvent e)
         {
         }
+        @Override
         public void keyReleased(KeyEvent e)
         {
         }
-        public void KeyPressed(KeyEvent e)
+        @Override
+        public void keyPressed(KeyEvent e)
         {            
             //Player 2 movements and shooting
             if (e.getKeyCode() == KeyEvent.VK_UP)
