@@ -26,7 +26,7 @@ public class Game extends JPanel implements ActionListener{
     private boolean p1FaceLeft = false;
     private boolean p1FaceDown = false;
     private boolean p1FaceUp = true;	
-    private int p1Tanks = 5;
+    private int p1TankHealth = 100;
     private boolean p1IsShoot = false;
     private String p1ShellDir = "";
     
@@ -38,7 +38,7 @@ public class Game extends JPanel implements ActionListener{
     private boolean p2FaceLeft = false;
     private boolean p2FaceDown = false;
     private boolean p2FaceUp = true;	
-    private int p2Tanks = 5;
+    private int p2TankHealth = 100;
     private boolean p2IsShoot = false;
     private String p2ShellDir = "";
     
@@ -69,10 +69,10 @@ public class Game extends JPanel implements ActionListener{
     public void paint(Graphics g)
     {
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, 650, 600);
+        g.fillRect(0, 100, 900, 900);
         
         g.setColor(Color.GRAY);
-        g.fillRect(660, 0, 140, 600); //can change to the top of the screen instead
+        g.fillRect(0, 0, 900, 100); //can change to the top of the screen instead
         
         wall.draw(this, g);
         
@@ -147,7 +147,7 @@ public class Game extends JPanel implements ActionListener{
                 
                 if (new Rectangle(p1Shell.getX(), p1Shell.getY(), 10, 10).intersects(new Rectangle(p2XCoord, p2YCoord, 50, 50)))
                 {
-                    p2Tanks --;
+                    p2TankHealth -= 20;
                     p1Shell = null;
                     p1IsShoot = false;
                     p1ShellDir = "";
@@ -162,7 +162,7 @@ public class Game extends JPanel implements ActionListener{
                 }
                 
                 //if shell shoots out of bounds cancel shell
-                if (p1Shell.getX() < 1 || p1Shell.getX() > 630 || p1Shell.getY() < 1 || p1Shell.getY() > 580)
+                if (p1Shell.getX() < 1 || p1Shell.getX() > 880 || p1Shell.getY() < 110 || p1Shell.getY() > 880)
                 {
                     p1Shell = null;
                     p1IsShoot = false;
@@ -200,7 +200,7 @@ public class Game extends JPanel implements ActionListener{
                 
                 if (new Rectangle(p2Shell.getX(), p2Shell.getY(), 10, 10).intersects(new Rectangle(p1XCoord, p1YCoord, 50, 50)))
                 {
-                    p1Tanks --;
+                    p1TankHealth -= 20;
                     p2Shell = null;
                     p2IsShoot = false;
                     p2ShellDir = "";
@@ -215,7 +215,7 @@ public class Game extends JPanel implements ActionListener{
                 }
                 
                 //if shell shoots out of bounds cancel shell
-                if (p2Shell.getX() < 1 || p2Shell.getX() > 630 || p2Shell.getY() < 1 || p2Shell.getY() > 580)
+                if (p2Shell.getX() < 1 || p2Shell.getX() > 880 || p2Shell.getY() < 110 || p2Shell.getY() > 880)
                 {
                     p2Shell = null;
                     p2IsShoot = false;
@@ -226,22 +226,22 @@ public class Game extends JPanel implements ActionListener{
         
         g.setColor(Color.WHITE);
         g.setFont(new Font("serif", Font.BOLD, 15));
-        g.drawString("Tanks Left", 700, 150);
-        g.drawString("Player 1: " + p1Tanks, 670, 180);
-        g.drawString("Player 2: " + p2Tanks, 670, 210);
+        g.drawString("Tank HP Left", 400, 50);
+        g.drawString("Player 1: " + p1TankHealth, 300, 75);
+        g.drawString("Player 2: " + p2TankHealth, 500, 75);
         
-        if (p1Tanks <= 0)
+        if (p1TankHealth <= 0)
         {
             g.setColor(Color.WHITE);
             g.setFont(new Font("serif", Font.BOLD, 60));
-            g.drawString("Game Over", 200, 300);
+            g.drawString("Game Over", 300, 450);
             g.drawString("Player 2 Wins!", 180, 380);
             playGame = false;
             g.setColor(Color.WHITE);
             g.setFont(new Font("serif", Font.BOLD, 30));
             g.drawString("(\"R\" to Restart)", 230, 430);
         }
-        else if (p2Tanks <= 0)
+        else if (p2TankHealth <= 0)
         {
             g.setColor(Color.WHITE);
             g.setFont(new Font("serif", Font.BOLD, 60));
@@ -277,7 +277,7 @@ public class Game extends JPanel implements ActionListener{
         public void keyPressed(KeyEvent e)
         {
             //Restart game during game over screen
-            if (e.getKeyCode() == KeyEvent.VK_R && (p1Tanks <= 0 || p2Tanks <= 0))
+            if (e.getKeyCode() == KeyEvent.VK_R && (p1TankHealth <= 0 || p2TankHealth <= 0))
             {
                 wall = new GameWall();
                 p1XCoord = 200;
@@ -294,8 +294,8 @@ public class Game extends JPanel implements ActionListener{
                 p2FaceDown = false;
                 p2FaceRight = false;
 
-                p1Tanks = 5;
-                p2Tanks = 5;
+                p1TankHealth = 100;
+                p2TankHealth = 100;
                 playGame = true;
                 repaint();
             }
@@ -307,7 +307,7 @@ public class Game extends JPanel implements ActionListener{
                 p1FaceLeft = false;
                 p1FaceDown = false;
                 p1FaceRight = false;
-                if(!(p1YCoord < 10))
+                if(!(p1YCoord < 110))
                 {
                     p1YCoord -= 10;
                 }
@@ -329,7 +329,7 @@ public class Game extends JPanel implements ActionListener{
                 p1FaceLeft = false;
                 p1FaceDown = true;
                 p1FaceRight = false;
-                if(!(p1YCoord > 540))
+                if(!(p1YCoord > 810))
                 {
                     p1YCoord += 10;
                 }
@@ -340,7 +340,7 @@ public class Game extends JPanel implements ActionListener{
                 p1FaceLeft = false;
                 p1FaceDown = false;
                 p1FaceRight = true;
-                if(!(p1XCoord > 590))
+                if(!(p1XCoord > 830))
                 {
                     p1XCoord += 10;
                 }
@@ -392,7 +392,7 @@ public class Game extends JPanel implements ActionListener{
                 p2FaceLeft = false;
                 p2FaceDown = false;
                 p2FaceRight = false;
-                if (!(p2YCoord < 10))
+                if (!(p2YCoord < 110))
                 {
                     p2YCoord -= 10;
                 }
@@ -414,7 +414,7 @@ public class Game extends JPanel implements ActionListener{
                 p2FaceLeft = false;
                 p2FaceDown = true;
                 p2FaceRight = false;
-                if (!(p2YCoord > 540))
+                if (!(p2YCoord > 810))
                 {
                     p2YCoord += 10;
                 }
@@ -425,7 +425,7 @@ public class Game extends JPanel implements ActionListener{
                 p2FaceLeft = false;
                 p2FaceDown = false;
                 p2FaceRight = true;
-                if (!(p2XCoord > 590))
+                if (!(p2XCoord > 830))
                 {
                     p2XCoord += 10;
                 }
