@@ -10,9 +10,11 @@ package tankbattle;
  */
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
+
+//Can use if an imported image of a tank shell is needed
+/*import java.awt.Image;
 import java.awt.image.BufferedImage;
-import javax.swing.ImageIcon;
+import javax.swing.ImageIcon;*/
 
 public class Player1Shell {
     private double x;
@@ -20,6 +22,7 @@ public class Player1Shell {
     
     public Player1Shell(double x, double y)
     {
+        
         this.x = x;
         this.y = y;
     }
