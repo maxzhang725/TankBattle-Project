@@ -13,24 +13,17 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 
-public class gameWall {
-    int wallXPosArray[] = {50,350,450,550,50,300,350,450,550,150,150,450,550, 
-                                                250,50,100,150,550,250,350,450,550,50,250,350,550,
-						50,150,250,300,350,550,50,150,250,350,450,550,50,
-						250,350,550};
-    int wallYPosArray[] = {50,50,50,50,100,100,100,100,100,150,200,200,200,250,
-						300,300,300,300,350,350,350,350,400,400,400,400,450,
-						450,450,450,450,450,500,500,500,500,500,500,550,550,
-						550,550};
+public class GameWall {
+    int wallXPosArray[] = {50,350,450,550,50,300,350,450,550,150,150,450,550,250,50,100,150,550,250,350,450,550,50,250,350,550,50,150,250,300,350,550,50,150,250,350,450,550,50,250,350,550};
+    int wallYPosArray[] = {50,50,50,50,100,100,100,100,100,150,200,200,200,250,300,300,300,300,350,350,350,350,400,400,400,400,450,450,450,450,450,450,500,500,500,500,500,500,550,550,550,550};
     
     int walls[] = new int[42];
     
     private ImageIcon wallIcon;
     
-    public gameWall()
+    public GameWall()
     {
-        wallIcon = new ImageIcon("wall.jpg");
-        
+        wallIcon = new ImageIcon("src\\tankbattle\\images\\wall.jpg");
         for (int i = 0; i < walls.length; i++)
         {
             walls[i] = 1;
