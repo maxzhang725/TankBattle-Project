@@ -21,7 +21,7 @@ public class TankBattle {
         Game game = new Game();
       
         //sets up the ui for game
-        screen.setBounds(10, 10, 800, 630);
+        screen.setBounds(10, 10, 900, 900);
         screen.setTitle("Tank Battle");
         screen.setBackground(Color.WHITE);
         screen.setResizable(false); //maybe dont need
