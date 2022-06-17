@@ -8,6 +8,7 @@ package tankbattle;
  *
  * @author MaxZhang
  */
+
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
@@ -17,11 +18,12 @@ import java.awt.event.KeyListener;
 
 public class Game extends JPanel implements ActionListener{
     private GameWall wall;
+    private GameWall tree;
     
     //Sets up every instance variable related to player/tank 1
     private ImageIcon tank1;	
-    private int p1XCoord = 200;
-    private int p1YCoord = 550;	
+    private int p1XCoord = 150;
+    private int p1YCoord = 250;	
     private boolean p1FaceRight = false;
     private boolean p1FaceLeft = false;
     private boolean p1FaceDown = false;
@@ -32,8 +34,8 @@ public class Game extends JPanel implements ActionListener{
     
     //Sets up every instance variable related to player/tank 2
     private ImageIcon tank2;	
-    private int p2XCoord = 400;
-    private int p2YCoord = 550;	
+    private int p2XCoord = 700;
+    private int p2YCoord = 250;	
     private boolean p2FaceRight = false;
     private boolean p2FaceLeft = false;
     private boolean p2FaceDown = false;
@@ -54,6 +56,7 @@ public class Game extends JPanel implements ActionListener{
     public Game()
     {
         wall = new GameWall();
+        tree = new GameWall();
         p1Keyboard = new Player1Keyboard();
         p2Keyboard = new Player2Keyboard();
         setFocusable(true); //maybe dont need
@@ -74,7 +77,8 @@ public class Game extends JPanel implements ActionListener{
         g.setColor(Color.GRAY);
         g.fillRect(0, 0, 900, 100); //can change to the top of the screen instead
         
-        wall.draw(this, g);
+        wall.drawWalls(this, g);
+        tree.drawTrees(this, g);
         
         if(playGame);
         {
@@ -95,6 +99,7 @@ public class Game extends JPanel implements ActionListener{
             {
                 tank1 = new ImageIcon("src\\tankbattle\\images\\player1_tank_right.png");
             }
+            int p1Spawn = (int)(Math.random() * 3);
             tank1.paintIcon(this, g, p1XCoord, p1YCoord);
             
             
@@ -154,7 +159,15 @@ public class Game extends JPanel implements ActionListener{
                 }
                 
                 //if shell shoots into wall cancel shell
-                if (wall.hasCollided(p1Shell.getX(), p1Shell.getY()))
+                if (wall.hasCollidedWall(p1Shell.getX(), p1Shell.getY()))
+                {
+                    p1Shell = null;
+                    p1IsShoot = false;
+                    p1ShellDir = "";
+                }
+                
+                //if shell shoots into tree cancel shell
+                if (tree.hasCollidedTree(p1Shell.getX(), p1Shell.getY()))
                 {
                     p1Shell = null;
                     p1IsShoot = false;
@@ -207,7 +220,15 @@ public class Game extends JPanel implements ActionListener{
                 }
                 
                 //if shell shoots into wall cancel shell
-                if (wall.hasCollided(p2Shell.getX(), p2Shell.getY()))
+                if (wall.hasCollidedWall(p2Shell.getX(), p2Shell.getY()))
+                {
+                    p2Shell = null;
+                    p2IsShoot = false;
+                    p2ShellDir = "";
+                }
+                
+                //if shell shoots into tree cancel shell
+                if (tree.hasCollidedTree(p2Shell.getX(), p2Shell.getY()))
                 {
                     p2Shell = null;
                     p2IsShoot = false;
@@ -226,31 +247,31 @@ public class Game extends JPanel implements ActionListener{
         
         g.setColor(Color.WHITE);
         g.setFont(new Font("serif", Font.BOLD, 15));
-        g.drawString("Tank HP Left", 400, 50);
-        g.drawString("Player 1: " + p1TankHealth, 300, 75);
-        g.drawString("Player 2: " + p2TankHealth, 500, 75);
+        g.drawString("Tank Health", 400, 50);
+        g.drawString("Player 1: " + p1TankHealth + " HP", 300, 75);
+        g.drawString("Player 2: " + p2TankHealth + " HP", 500, 75);
         
         if (p1TankHealth <= 0)
         {
             g.setColor(Color.WHITE);
             g.setFont(new Font("serif", Font.BOLD, 60));
             g.drawString("Game Over", 300, 450);
-            g.drawString("Player 2 Wins!", 180, 380);
+            g.drawString("Player 2 Wins!", 265, 525);
             playGame = false;
             g.setColor(Color.WHITE);
             g.setFont(new Font("serif", Font.BOLD, 30));
-            g.drawString("(\"R\" to Restart)", 230, 430);
+            g.drawString("(\"R\" to Restart)", 340, 600);
         }
         else if (p2TankHealth <= 0)
         {
             g.setColor(Color.WHITE);
             g.setFont(new Font("serif", Font.BOLD, 60));
-            g.drawString("Game Over", 200, 300);
-            g.drawString("Player 1 Wins!", 180, 380);
+            g.drawString("Game Over", 300, 450);
+            g.drawString("Player 1 Wins!", 265, 525);
             playGame = false;
             g.setColor(Color.WHITE);
             g.setFont(new Font("serif", Font.BOLD, 30));
-            g.drawString("(\"R\" to Restart)", 230, 430);
+            g.drawString("(\"R\" to Restart)", 340, 600);
         }
         
         g.dispose();
@@ -280,15 +301,45 @@ public class Game extends JPanel implements ActionListener{
             if (e.getKeyCode() == KeyEvent.VK_R && (p1TankHealth <= 0 || p2TankHealth <= 0))
             {
                 wall = new GameWall();
-                p1XCoord = 200;
-                p1YCoord = 550;
+                tree = new GameWall();
+                
+                int tank1Spawn = (int)(Math.random() * 3);
+                if (tank1Spawn == 0)
+                {
+                    p1XCoord = 150;
+                    p1YCoord = 250;    
+                }
+                else if (tank1Spawn == 1)
+                {
+                    p1XCoord = 200;
+                    p1YCoord = 600;
+                }
+                else
+                {
+                    p1XCoord = 425;
+                    p1YCoord = 625;
+                }
                 p1FaceUp = true;
                 p1FaceLeft = false;
                 p1FaceDown = false;
                 p1FaceRight = false;
-
-                p2XCoord = 400;
-                p2YCoord = 550;
+                
+                int tank2Spawn = (int)(Math.random() * 3);
+                if (tank2Spawn == 0)
+                {
+                    p2XCoord = 700;
+                    p2YCoord = 250;    
+                }
+                else if (tank2Spawn == 1)
+                {
+                    p2XCoord = 700;
+                    p2YCoord = 600;
+                }
+                else
+                {
+                    p2XCoord = 425;
+                    p2YCoord = 125;
+                }
                 p2FaceUp = true;
                 p2FaceLeft = false;
                 p2FaceDown = false;
