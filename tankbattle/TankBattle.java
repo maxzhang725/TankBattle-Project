@@ -8,6 +8,8 @@ package tankbattle;
  *
  * @author MaxZhang
  */
+//WASD and Space to move and shoot for Player 1
+//Arrow Keys and Forward Slash to move and shoot for Player 2
 import java.awt.Color;
 import javax.swing.JFrame;
 public class TankBattle {
